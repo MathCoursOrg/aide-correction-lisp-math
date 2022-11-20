@@ -1,0 +1,345 @@
+% Created 2022-11-20 dim. 17:20
+% Intended LaTeX compiler: pdflatex
+\documentclass[a4paper, 11pt, DIV=18]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{svg}
+\input{/home/fabien/alphabetagammadelta/parametre.tex}
+\author{Delhomme Fabien}
+\date{\today}
+\title{Aide Correction}
+\hypersetup{
+ pdfauthor={Delhomme Fabien},
+ pdftitle={Aide Correction},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1 (Org mode 9.6)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+\section{Objectif}
+\label{sec:org838467c}
+
+Avoir une interface qui permette de m'aider pour la correction de contrôle.
+
+J'aimerai notamment :
+
+\begin{itemize}
+\item comptage des points
+\item statistiques de réussite
+\item grille de réussite pour chaque question (``propreté'', ``justification'')
+\item Détection automatique d'erreur systématique chez les élèves, pour les notifier
+efficacement.
+\item exporter en csv pour analyser les données dans un tableur.
+\end{itemize}
+
+\section{Étape 1}
+\label{sec:orgb40b5c9}
+
+\subsection{On définit l'ensemble des élèves dans une variable globale}
+\label{sec:orged30cbe}
+
+Nous avons donc le code lisp suivant :
+\begin{minted}[breaklines=true,breakanywhere=true,frame=lines,samepage=true]{lisp}
+(defparameter *classe* '((ABDOUNE Maxence)
+                         (AGAMAKOU Axel)
+                         (ATTYE Charlotte)
+                         (BEMBA Séréna)
+                         (BRESSY Jade)
+                         (CALEJO Alex)
+                         (CHARLES Maeva)
+                         (CORREIA Joana)
+                         (DE-LUISE Enzo)
+                         (DE-PERCIN Kristopher)
+                         (FOURDRINIER Thomas)
+                         (GALLOY Ronan)
+                         (GARRUZZO Rafael)
+                         (GERMAIN Willem)
+                         (GORSSE Clara)
+                         (LABAYE Elodie)
+                         (LEOCADIE Enzo)
+                         (LEVI-VALENSI Margaux)
+                         (MADAOUI Lyma)
+                         (MAHROUG Walid)
+                         (MARTIN Emma)
+                         (MOUROU Aya)
+                         (POUMAROUX Alyssia)
+                         (PUPILLI Lola)
+                         (RACON Kassidi)
+                         (RAMTANI Cerina)
+                         (RENZI Ambre)
+                         (SAHNOUN Halima)
+                         (SALEM Ibrahim)
+                         (SALLENAVE Helene)
+                         (SLIMANI Shirine)
+                         (TRAN Matthieu)
+                         (TRAORE Saïd)
+                         (TSHISELEKA MUTETENU Justino)
+                         (VAREILLE Mathieu)
+                         (ZEKA Kerene)))
+\end{minted}
+
+\begin{verbatim}
+*CLASSE*
+\end{verbatim}
+
+
+Avoir des cons-listes ou des listes ne changent pas grand chose à mon avis.
+Autant faire au plus simple avec des listes.
+
+\subsection{Exemple}
+\label{sec:org51e2248}
+
+On peut parcourir l'ensemble des élèves par :
+\begin{minted}[breaklines=true,breakanywhere=true,frame=lines,samepage=true]{lisp}
+(loop for (nom prenom) in *classe* do
+  (print nom)
+  (princ prenom))
+
+(format t "~%La classe comporte ~S élèves" (length *classe*))
+\end{minted}
+
+\begin{verbatim}
+
+ABDOUNE MAXENCE
+AGAMAKOU AXEL
+ATTYE CHARLOTTE
+BEMBA SÉRÉNA
+BRESSY JADE
+CALEJO ALEX
+CHARLES MAEVA
+CORREIA JOANA
+DE-LUISE ENZO
+DE-PERCIN KRISTOPHER
+FOURDRINIER THOMAS
+GALLOY RONAN
+GARRUZZO RAFAEL
+GERMAIN WILLEM
+GORSSE CLARA
+LABAYE ELODIE
+LEOCADIE ENZO
+LEVI-VALENSI MARGAUX
+MADAOUI LYMA
+MAHROUG WALID
+MARTIN EMMA
+MOUROU AYA
+POUMAROUX ALYSSIA
+PUPILLI LOLA
+RACON KASSIDI
+RAMTANI CERINA
+RENZI AMBRE
+SAHNOUN HALIMA
+SALEM IBRAHIM
+SALLENAVE HELENE
+SLIMANI SHIRINE
+TRAN MATTHIEU
+TRAORE SAÏD
+TSHISELEKA MUTETENU
+VAREILLE MATHIEU
+ZEKA KERENE
+La classe comporte 36 élèves
+\end{verbatim}
+
+\section{Mise en forme des contrôle dans lisp}
+\label{sec:org37b4570}
+
+\subsection{Définition d'un contrôle.}
+\label{sec:org7947ef2}
+
+Un contrôle est une évaluation qui comporte un certain nombre de \textbf{questions}.
+Chaque question vérifie que l'élève sait faire un certain nombre de
+\textbf{compétences}. Chaque compétences acquises rapporte un certain nombre de \textbf{points}.
+
+Plusieurs pistes pour implémenter un contrôle dans lisp :
+\begin{itemize}
+\item La programmation orientée objet.
+\item Une liste de liste. On peut utiliser des clé voire des tableaux de hashage.
+\end{itemize}
+
+La solution la plus souple me paraît être la deuxième option. Je ne connais pas
+assez les objets dans lisp pour m'y fier.
+
+\subsection{Programmer un exemple de contrôle.}
+\label{sec:orge8bf67e}
+
+On définit au passage une fonction qui ajoute un contrôle à la liste des contrôles.
+\begin{minted}[breaklines=true,breakanywhere=true,frame=lines,samepage=true]{lisp}
+(defparameter *controles* '())
+
+(defparameter *controle-1* '(
+                             (
+                                (:enonce "Combien vaut 1 + 1 ?" :competence (:calcul 1 :presentation 0.5))
+                                (:enonce "Montrer que $\sqrt{2}$ est irrationnel." :competence (:demonstration 2 :proprete 1 :logique 1)))))
+
+(defun ajouter-controle (controle)
+    (append controle *controles*))
+
+(defun reset-controles ()
+    (setf *controles '()))
+
+(ajouter-controle *controle-1*)
+\end{minted}
+
+\subsection{Accéder aux caractéristiques d'un contrôle}
+\label{sec:orge3d1c41}
+
+On souhaite accéder aux nombres de points de la première question. On définit
+deux fonctions qui permettent d'accéder aux compétences d'une question d'un
+contrôle, et une autre qui retourne le nombre de points associés à cette question.
+
+On avait débuté par faire des accès «absolus» aux questions, mais ça sert à
+rien. Les fonctions acceptent une liste qu'elles comprennent comme une question.
+Beaucoup plus souple, et pas besoin de traîner des indices partout. On voit ça
+notamment dans la ligne 23.
+
+\begin{minted}[linenos,firstnumber=1,breaklines=true,breakanywhere=true,frame=lines,samepage=true]{lisp}
+;; (defun liste-competence-point-question (controle exercice question)
+;;   (let ((question-selectionne (nth question (nth exercice controle))))
+;;     (getf question-selectionne :competence)))
+
+(defun liste-competences-points-question (question)
+  (getf question :competence))
+
+;; (defun nombre-point-question (controle exercice question)
+;;   (let ((ensemble-competence (liste-competence-point-question controle exercice question)))
+;;     (reduce '+ (remove-if-not 'numberp ensemble-competence))))
+
+(defun nombre-points-question (question)
+  "En donnant une question, retourne la somme des points associés aux compétences."
+  (reduce '+ (remove-if-not 'numberp question)))
+
+(defun nombre-points-controle (controle)
+  (loop
+    for exercice in controle
+    sum (loop
+            for question in exercice
+            sum (nombre-points-question (liste-competences-points-question question)))))
+
+;(nombre-point-question *controle-1* 0 0)
+(nombre-points-controle *controle-1*)
+\end{minted}
+
+\begin{verbatim}
+5.5
+\end{verbatim}
+
+\subsection{Coder une interface pour ajouter un nouveau contrôle}
+\label{sec:orgf7d01d7}
+
+
+\section{Macro}
+\label{sec:org7e40b86}
+
+\subsection{Parcourir toutes les questions d'un contrôle}
+\label{sec:org6fde32e}
+
+Une idée à peaufiner pour plus tard.
+
+On notera qu'il peut y avoir des soucis à ne pas avoir utiliser \texttt{gemsym} pour le
+nom d'une variable (ici exercice) qui parcourt les exercices.
+
+Pour l'instant le code ne fonctionne pas.
+\begin{minted}[breaklines=true,breakanywhere=true,frame=lines,samepage=true]{lisp}
+(defmacro pour (question controle &body)
+    `(loop
+        for exercice in ,controle
+            do
+                (loop
+                    for ,question in exercice
+                        do
+                            &body)))
+\end{minted}
+
+\section{Corriger un contrôle}
+\label{sec:org2e7f481}
+
+\subsection{Proposer une interface qui intervient pour chaque élève.}
+\label{sec:orgdad4d98}
+
+Pour l'instant je ne sais pas créer une copie du modèle contrôle qui ne
+contiennent que des compétences initialisée à \(0\) sans modifier la liste des
+compétences de chaque question.
+
+J'ai testé de définir une liste des compétences pour chercher parmis elles, mais
+dans ce cas on crée des propriétés pour celle qui n'y était pas, ce n'est pas ce
+que l'on veut.
+
+Une autre idée : une plist est une liste. Donc, on peut tout simplement tout
+parcourir et mettre tous les nombres à 0.
+
+Je suis en train d'implémenter cette idée dans la fonction \texttt{reset-nombre-zero}
+mais c'est pas si évident.
+\begin{minted}[breaklines=true,breakanywhere=true,frame=lines,samepage=true]{lisp}
+;; Il faudrait une copie neuve du contrôle
+;; qui représente la copie de l'élève.
+
+(defparameter *liste-competences* '(:calcul :raisonement :logique) "Liste des compétences d'une question.")
+
+(defun reset-nombre-zero (liste)
+  (let ((element (car liste)))
+    (cond
+      ((numberp element)
+        (progn
+                (setf (car liste) 0)
+                (reset-nombre-zero (cdr liste))))
+      ((listp element)
+        (reset-nombre-zero (car element))))
+    liste))
+
+(defun reset-notes (question)
+    (loop
+        for competence in *liste-competences*
+        do
+        (let ((champ-competence (getf question :competence)))
+            (when (getf champ-competence competence) (setf (getf champ-competence competence) 0))
+            (print champ-competence)))
+    question)
+
+(defun copie-eleve (controle)
+  "Donne une copie viege du contrôle, prete à être corrigée"
+  ;; C'est là que les objets aurait pu être utile...
+    (loop
+        for exercice in controle
+            collect (loop
+                        for question in exercice
+                            (reset-notes (copy-list question)))))
+
+
+
+
+;;On parcourt chaque eleve
+
+(loop
+  for eleve in *classe*)
+\end{minted}
+
+\begin{verbatim}
+NIL
+\end{verbatim}
+
+\section{Commandes pour faciliter la correction}
+\label{sec:org25f69b3}
+
+\subsection{En vrac}
+\label{sec:orgc95728c}
+
+\begin{itemize}
+\item search pour chercher un élève dans la liste, et le sélectionner pour modifier
+ses notes
+\item stat pour sortir les statistiques par questions du contrôle
+\end{itemize}
+
+*
+\end{document}

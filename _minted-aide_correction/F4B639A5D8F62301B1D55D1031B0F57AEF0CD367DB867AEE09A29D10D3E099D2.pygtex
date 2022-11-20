@@ -1,0 +1,43 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{;; Il faudrait une copie neuve du contrôle}
+\PYG{c+c1}{;; qui représente la copie de l\PYGZsq{}élève.}
+
+\PYG{p}{(}\PYG{n+nb}{defparameter}\PYG{+w}{ }\PYG{n+nv+vg}{*liste\PYGZhy{}competences*}\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{l+s+ss}{:calcul}\PYG{+w}{ }\PYG{l+s+ss}{:raisonement}\PYG{+w}{ }\PYG{l+s+ss}{:logique}\PYG{p}{)}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Liste des compétences d\PYGZsq{}une question.\PYGZdq{}}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{reset\PYGZhy{}nombre\PYGZhy{}zero}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{liste}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{(}\PYG{k}{let}\PYG{+w}{ }\PYG{p}{((}\PYG{n+nv}{element}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{car}\PYG{+w}{ }\PYG{n+nv}{liste}\PYG{p}{)))}
+\PYG{+w}{    }\PYG{p}{(}\PYG{n+nb}{cond}
+\PYG{+w}{      }\PYG{p}{((}\PYG{n+nb}{numberp}\PYG{+w}{ }\PYG{n+nv}{element}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{(}\PYG{k}{progn}
+\PYG{+w}{                }\PYG{p}{(}\PYG{n+nb}{setf}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{car}\PYG{+w}{ }\PYG{n+nv}{liste}\PYG{p}{)}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{(}\PYG{n+nv}{reset\PYGZhy{}nombre\PYGZhy{}zero}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{cdr}\PYG{+w}{ }\PYG{n+nv}{liste}\PYG{p}{))))}
+\PYG{+w}{      }\PYG{p}{((}\PYG{n+nb}{listp}\PYG{+w}{ }\PYG{n+nv}{element}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{(}\PYG{n+nv}{reset\PYGZhy{}nombre\PYGZhy{}zero}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{car}\PYG{+w}{ }\PYG{n+nv}{element}\PYG{p}{))))}
+\PYG{+w}{    }\PYG{n+nv}{liste}\PYG{p}{))}
+
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{reset\PYGZhy{}notes}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{question}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{(}\PYG{n+nb}{loop}
+\PYG{+w}{        }\PYG{n+nv}{for}\PYG{+w}{ }\PYG{n+nv}{competence}\PYG{+w}{ }\PYG{n+nv}{in}\PYG{+w}{ }\PYG{n+nv+vg}{*liste\PYGZhy{}competences*}
+\PYG{+w}{        }\PYG{n+nb}{do}
+\PYG{+w}{        }\PYG{p}{(}\PYG{k}{let}\PYG{+w}{ }\PYG{p}{((}\PYG{n+nv}{champ\PYGZhy{}competence}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{getf}\PYG{+w}{ }\PYG{n+nv}{question}\PYG{+w}{ }\PYG{l+s+ss}{:competence}\PYG{p}{)))}
+\PYG{+w}{            }\PYG{p}{(}\PYG{n+nb}{when}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{getf}\PYG{+w}{ }\PYG{n+nv}{champ\PYGZhy{}competence}\PYG{+w}{ }\PYG{n+nv}{competence}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{setf}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{getf}\PYG{+w}{ }\PYG{n+nv}{champ\PYGZhy{}competence}\PYG{+w}{ }\PYG{n+nv}{competence}\PYG{p}{)}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{))}
+\PYG{+w}{            }\PYG{p}{(}\PYG{n+nb}{print}\PYG{+w}{ }\PYG{n+nv}{champ\PYGZhy{}competence}\PYG{p}{)))}
+\PYG{+w}{    }\PYG{n+nv}{question}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{copie\PYGZhy{}eleve}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{controle}\PYG{p}{)}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}Donne une copie viege du contrôle, prete à être corrigée\PYGZdq{}}
+\PYG{+w}{  }\PYG{c+c1}{;; C\PYGZsq{}est là que les objets aurait pu être utile...}
+\PYG{+w}{    }\PYG{p}{(}\PYG{n+nb}{loop}
+\PYG{+w}{        }\PYG{n+nv}{for}\PYG{+w}{ }\PYG{n+nv}{exercice}\PYG{+w}{ }\PYG{n+nv}{in}\PYG{+w}{ }\PYG{n+nv}{controle}
+\PYG{+w}{            }\PYG{n+nv}{collect}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{loop}
+\PYG{+w}{                        }\PYG{n+nv}{for}\PYG{+w}{ }\PYG{n+nv}{question}\PYG{+w}{ }\PYG{n+nv}{in}\PYG{+w}{ }\PYG{n+nv}{exercice}
+\PYG{+w}{                            }\PYG{p}{(}\PYG{n+nv}{reset\PYGZhy{}notes}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{copy\PYGZhy{}list}\PYG{+w}{ }\PYG{n+nv}{question}\PYG{p}{)))))}
+
+
+
+
+\PYG{c+c1}{;;On parcourt chaque eleve}
+
+\PYG{p}{(}\PYG{n+nb}{loop}
+\PYG{+w}{  }\PYG{n+nv}{for}\PYG{+w}{ }\PYG{n+nv}{eleve}\PYG{+w}{ }\PYG{n+nv}{in}\PYG{+w}{ }\PYG{n+nv+vg}{*classe*}\PYG{p}{)}
+\end{Verbatim}

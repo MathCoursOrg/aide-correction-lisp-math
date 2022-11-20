@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{defparameter}\PYG{+w}{ }\PYG{n+nv+vg}{*controles*}\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{())}
+
+\PYG{p}{(}\PYG{n+nb}{defparameter}\PYG{+w}{ }\PYG{n+nv+vg}{*controle\PYGZhy{}1*}\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{(}
+\PYG{+w}{                             }\PYG{p}{(}
+\PYG{+w}{                                }\PYG{p}{(}\PYG{l+s+ss}{:enonce}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Combien vaut 1 + 1 ?\PYGZdq{}}\PYG{+w}{ }\PYG{l+s+ss}{:competence}\PYG{+w}{ }\PYG{p}{(}\PYG{l+s+ss}{:calcul}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{l+s+ss}{:presentation}\PYG{+w}{ }\PYG{l+m+mf}{0.5}\PYG{p}{))}
+\PYG{+w}{                                }\PYG{p}{(}\PYG{l+s+ss}{:enonce}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Montrer que \PYGZdl{}\PYGZbs{}sqrt\PYGZob{}2\PYGZcb{}\PYGZdl{} est irrationnel.\PYGZdq{}}\PYG{+w}{ }\PYG{l+s+ss}{:competence}\PYG{+w}{ }\PYG{p}{(}\PYG{l+s+ss}{:demonstration}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{l+s+ss}{:proprete}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{l+s+ss}{:logique}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)))))}
+
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{ajouter\PYGZhy{}controle}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{controle}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{(}\PYG{n+nb}{append}\PYG{+w}{ }\PYG{n+nv}{controle}\PYG{+w}{ }\PYG{n+nv+vg}{*controles*}\PYG{p}{))}
+
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{reset\PYGZhy{}controles}\PYG{+w}{ }\PYG{p}{()}
+\PYG{+w}{    }\PYG{p}{(}\PYG{n+nb}{setf}\PYG{+w}{ }\PYG{n+nv}{*controles}\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{()))}
+
+\PYG{p}{(}\PYG{n+nv}{ajouter\PYGZhy{}controle}\PYG{+w}{ }\PYG{n+nv+vg}{*controle\PYGZhy{}1*}\PYG{p}{)}
+\end{Verbatim}

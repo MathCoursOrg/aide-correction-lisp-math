@@ -1,0 +1,26 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{;; (defun liste\PYGZhy{}competence\PYGZhy{}point\PYGZhy{}question (controle exercice question)}
+\PYG{c+c1}{;;   (let ((question\PYGZhy{}selectionne (nth question (nth exercice controle))))}
+\PYG{c+c1}{;;     (getf question\PYGZhy{}selectionne :competence)))}
+
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{liste\PYGZhy{}competences\PYGZhy{}points\PYGZhy{}question}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{question}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nb}{getf}\PYG{+w}{ }\PYG{n+nv}{question}\PYG{+w}{ }\PYG{l+s+ss}{:competence}\PYG{p}{))}
+
+\PYG{c+c1}{;; (defun nombre\PYGZhy{}point\PYGZhy{}question (controle exercice question)}
+\PYG{c+c1}{;;   (let ((ensemble\PYGZhy{}competence (liste\PYGZhy{}competence\PYGZhy{}point\PYGZhy{}question controle exercice question)))}
+\PYG{c+c1}{;;     (reduce \PYGZsq{}+ (remove\PYGZhy{}if\PYGZhy{}not \PYGZsq{}numberp ensemble\PYGZhy{}competence))))}
+
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{nombre\PYGZhy{}points\PYGZhy{}question}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{question}\PYG{p}{)}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}En donnant une question, retourne la somme des points associés aux compétences.\PYGZdq{}}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nb}{reduce}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}+}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{remove\PYGZhy{}if\PYGZhy{}not}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}numberp}\PYG{+w}{ }\PYG{n+nv}{question}\PYG{p}{)))}
+
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{nombre\PYGZhy{}points\PYGZhy{}controle}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{controle}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nb}{loop}
+\PYG{+w}{    }\PYG{n+nv}{for}\PYG{+w}{ }\PYG{n+nv}{exercice}\PYG{+w}{ }\PYG{n+nv}{in}\PYG{+w}{ }\PYG{n+nv}{controle}
+\PYG{+w}{    }\PYG{n+nv}{sum}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{loop}
+\PYG{+w}{            }\PYG{n+nv}{for}\PYG{+w}{ }\PYG{n+nv}{question}\PYG{+w}{ }\PYG{n+nv}{in}\PYG{+w}{ }\PYG{n+nv}{exercice}
+\PYG{+w}{            }\PYG{n+nv}{sum}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{nombre\PYGZhy{}points\PYGZhy{}question}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{liste\PYGZhy{}competences\PYGZhy{}points\PYGZhy{}question}\PYG{+w}{ }\PYG{n+nv}{question}\PYG{p}{)))))}
+
+\PYG{c+c1}{;(nombre\PYGZhy{}point\PYGZhy{}question *controle\PYGZhy{}1* 0 0)}
+\PYG{p}{(}\PYG{n+nv}{nombre\PYGZhy{}points\PYGZhy{}controle}\PYG{+w}{ }\PYG{n+nv+vg}{*controle\PYGZhy{}1*}\PYG{p}{)}
+\end{Verbatim}

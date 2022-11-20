@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{liste\PYGZhy{}competence\PYGZhy{}point\PYGZhy{}question}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{controle}\PYG{+w}{ }\PYG{n+nv}{exercice}\PYG{+w}{ }\PYG{n+nv}{question}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{(}\PYG{k}{let}\PYG{+w}{ }\PYG{p}{((}\PYG{n+nv}{question\PYGZhy{}selectionne}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{nth}\PYG{+w}{ }\PYG{n+nv}{question}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{nth}\PYG{+w}{ }\PYG{n+nv}{exercice}\PYG{+w}{ }\PYG{n+nv}{controle}\PYG{p}{))))}
+\PYG{+w}{    }\PYG{p}{(}\PYG{n+nb}{getf}\PYG{+w}{ }\PYG{n+nv}{question\PYGZhy{}selectionne}\PYG{+w}{ }\PYG{l+s+ss}{:competence}\PYG{p}{)))}
+
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{nombre\PYGZhy{}point\PYGZhy{}question}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{controle}\PYG{+w}{ }\PYG{n+nv}{exercice}\PYG{+w}{ }\PYG{n+nv}{question}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{(}\PYG{k}{let}\PYG{+w}{ }\PYG{p}{((}\PYG{n+nv}{ensemble\PYGZhy{}competence}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{liste\PYGZhy{}competence\PYGZhy{}point\PYGZhy{}question}\PYG{+w}{ }\PYG{n+nv}{controle}\PYG{+w}{ }\PYG{n+nv}{exercice}\PYG{+w}{ }\PYG{n+nv}{question}\PYG{p}{)))}
+\PYG{+w}{    }\PYG{p}{(}\PYG{n+nb}{reduce}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}+}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{remove\PYGZhy{}if\PYGZhy{}not}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}numberp}\PYG{+w}{ }\PYG{n+nv}{ensemble\PYGZhy{}competence}\PYG{p}{))))}
+
+\PYG{p}{(}\PYG{n+nv}{nombre\PYGZhy{}point\PYGZhy{}question}\PYG{+w}{ }\PYG{n+nv+vg}{*controle\PYGZhy{}1*}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)}
+\end{Verbatim}
