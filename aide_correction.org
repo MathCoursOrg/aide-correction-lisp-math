@@ -228,7 +228,7 @@ Pour l'instant le code ne fonctionne pas.
 
 * Corriger un contrôle
 
-** Proposer une interface qui intervient pour chaque élève.
+** TODO Proposer une interface qui intervient pour chaque élève.
 
 Pour l'instant je ne sais pas créer une copie du modèle contrôle qui ne
 contiennent que des compétences initialisée à $0$ sans modifier la liste des
@@ -243,6 +243,15 @@ parcourir et mettre tous les nombres à 0.
 
 Je suis en train d'implémenter cette idée dans la fonction ~reset-nombre-zero~
 mais c'est pas si évident.
+
+Le plan après c'est de :
+
+- On parcourt chaque eleve,
+- On crée une copie blanche
+- On parcourt la copie et on peut éditer les points
+- On fait le résumé de cet élève et tout est enregistré à chaque étape pour
+  éviter les pertes.
+
 #+begin_src lisp
 ;; Il faudrait une copie neuve du contrôle
 ;; qui représente la copie de l'élève.
@@ -253,11 +262,11 @@ mais c'est pas si évident.
   (let ((element (car liste)))
     (cond
       ((numberp element)
-        (progn
-                (setf (car liste) 0)
-                (reset-nombre-zero (cdr liste))))
+       (progn
+               (setf (car liste) 0)
+               (reset-nombre-zero (cdr liste))))
       ((listp element)
-        (reset-nombre-zero (car element))))
+       (reset-nombre-zero (car element))))
     liste))
 
 (defun reset-notes (question)
@@ -277,12 +286,6 @@ mais c'est pas si évident.
             collect (loop
                         for question in exercice
                             (reset-notes (copy-list question)))))
-
-
-
-
-;;On parcourt chaque eleve
-
 (loop
   for eleve in *classe*)
 #+end_src
