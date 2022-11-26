@@ -140,6 +140,14 @@ assez les objets dans lisp pour m'y fier.
 ** Programmer un exemple de contrôle.
 
 On définit au passage une fonction qui ajoute un contrôle à la liste des contrôles.
+
+Définir une fonction qui ajoute un exercice a un contrôle est plus délicate,
+puisque techniquement le contrôle en question n'est pas une variable globale. Je
+repousse ça à plus tard.
+
+La variable src_lisp[:exports code]{*controle-1*} contient deux exercices, le
+premier contient deux questions, et le suivant qu'une seule.
+
 #+name: ajouter-reset-controle
 #+begin_src lisp :exports code
 (defparameter *controles* '())
@@ -147,19 +155,26 @@ On définit au passage une fonction qui ajoute un contrôle à la liste des cont
 (defparameter *controle-1* '(
                              (
                                 (:enonce "Combien vaut 1 + 1 ?" :competence (:calcul 1 :presentation 0.5))
-                                (:enonce "Montrer que $\sqrt{2}$ est irrationnel." :competence (:demonstration 2 :proprete 1 :logique 1)))))
+                                (:enonce "Montrer que $\sqrt{2}$ est irrationnel." :competence (:demonstration 2 :proprete 1 :logique 1)))
+                             (
+                                 (:enonce "Démontre qu'une somme de vecteur est bien définie" :competence (:demonstration 2)))))
 
 (defun ajouter-controle (controle)
     (append controle *controles*))
 
+;; (defun ajouter-exercice (exercice controle)
+;;     (setf controle (append exercice controle)))
+
 (defun reset-controles ()
     (setf *controles '()))
 
+(defparameter *question-test* '(:enonce "Citer une identité remarquable" :competence (:cours 1)))
 (ajouter-controle *controle-1*)
 #+end_src
 
 #+RESULTS: ajouter-reset-controle
-| (:ENONCE Combien vaut 1 + 1 ? :COMPETENCE (:CALCUL 1 :PRESENTATION 0.5)) | (:ENONCE Montrer que $sqrt{2}$ est irrationnel. :COMPETENCE (:DEMONSTRATION 2 :PROPRETE 1 :LOGIQUE 1)) |
+| (:ENONCE Combien vaut 1 + 1 ? :COMPETENCE (:CALCUL 1 :PRESENTATION 0.5))                   | (:ENONCE Montrer que $sqrt{2}$ est irrationnel. :COMPETENCE (:DEMONSTRATION 2 :PROPRETE 1 :LOGIQUE 1)) |
+| (:ENONCE Démontre qu'une somme de vecteur est bien définie :COMPETENCE (:DEMONSTRATION 2)) |                                                                                                        |
 
 ** Accéder aux caractéristiques d'un contrôle
 
@@ -228,7 +243,8 @@ Pour l'instant le code ne fonctionne pas.
 
 * Corriger un contrôle
 
-** TODO Proposer une interface qui intervient pour chaque élève.
+** KILL Chaque élève est assigné à une copie du contrôle
+CLOSED: [2022-11-26 sam. 13:43]
 
 Pour l'instant je ne sais pas créer une copie du modèle contrôle qui ne
 contiennent que des compétences initialisée à $0$ sans modifier la liste des
@@ -246,7 +262,7 @@ mais c'est pas si évident.
 
 Le plan après c'est de :
 
-- On parcourt chaque eleve,
+- On parcourt chaque élève,
 - On crée une copie blanche
 - On parcourt la copie et on peut éditer les points
 - On fait le résumé de cet élève et tout est enregistré à chaque étape pour
@@ -259,36 +275,65 @@ Le plan après c'est de :
 (defparameter *liste-competences* '(:calcul :raisonement :logique) "Liste des compétences d'une question.")
 
 (defun reset-nombre-zero (liste)
-  (let ((element (car liste)))
+  (let ((element (car liste)) (suite-vide? (cdr liste)))
     (cond
-      ((numberp element)
-       (progn
-               (setf (car liste) 0)
-               (reset-nombre-zero (cdr liste))))
-      ((listp element)
-       (reset-nombre-zero (car element))))
-    liste))
+        ((numberp element) (progn
+                                (setf element 0)
+                                (unless suite-vide? (reset-nombre-zero (cdr liste)))))
+        ((listp element) (reset-nombre-zero (car element))))))
+
 
 (defun reset-notes (question)
-    (loop
-        for competence in *liste-competences*
-        do
-        (let ((champ-competence (getf question :competence)))
-            (when (getf champ-competence competence) (setf (getf champ-competence competence) 0))
-            (print champ-competence)))
-    question)
+  (loop)
+  for competence in *liste-competences*
+  do
+  (let ((champ-competence (getf question :competence)))
+      (when (getf champ-competence competence) (setf (getf champ-competence competence) 0))
+      (print champ-competence))
+  question)
 
 (defun copie-eleve (controle)
   "Donne une copie viege du contrôle, prete à être corrigée"
   ;; C'est là que les objets aurait pu être utile...
-    (loop
-        for exercice in controle
-            collect (loop
-                        for question in exercice
-                            (reset-notes (copy-list question)))))
-(loop
-  for eleve in *classe*)
+  (loop)
+  for exercice in controle
+  collect (loop
+              for question in exercice
+                    (reset-notes (copy-list question))))
 #+end_src
+
+** DONE On reconstruit le contrôle pour chaque élève
+CLOSED: [2022-11-26 sam. 14:36]
+
+C'est bon, ça marche ENFIN
+#+begin_src lisp
+(defun copie-controle-competence-0 (controle)
+  (when controle
+    (cond
+        ((getf controle :enonce) (afficher-question controle)) ;;Si ça a un énoncé, alors c'est une question
+        ((listp controle) (cons (copie-controle-competence-0 (car controle)) (copie-controle-competence-0 (cdr controle)))) ;;Sinon si c'est une liste, c'est un exercice
+        ((numberp controle) (read))
+        (t controle)))) ;;Sinon, c'est la structure du controle
+#+end_src
+
+#+RESULTS:
+: COPIE-CONTROLE-COMPETENCE-0
+
+** On commence la correction
+
+On pourrait mixer attribuer-point avec copie-controle-competence-0 : pour
+attribuer des points, on reconstruit le contrôle !
+#+begin_src lisp
+(defun afficher-question (question)
+  (print (getf question :enonce))
+  (print "Les points sont répartis selon les compétences suivantes :")
+  (print (getf question :competence)))
+
+#+end_src
+
+#+RESULTS:
+: AFFICHER-QUESTION
+
 * Commandes pour faciliter la correction
 
 ** En vrac
